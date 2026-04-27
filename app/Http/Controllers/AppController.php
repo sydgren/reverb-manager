@@ -43,7 +43,7 @@ class AppController extends Controller
         return redirect()->route('apps.show', $app);
     }
 
-    public function show(ReverbApp $app): Response
+    public function show(Request $request, ReverbApp $app): Response
     {
         return Inertia::render('apps/show', [
             'app' => [
@@ -62,6 +62,11 @@ class AppController extends Controller
                 'rate_limit_decay_seconds' => $app->rate_limit_decay_seconds,
                 'rate_limit_terminate_on_limit' => $app->rate_limit_terminate_on_limit,
                 'created_at' => $app->created_at?->toIso8601String(),
+            ],
+            'broadcaster' => [
+                'host' => env('REVERB_HOST') ?: $request->getHost(),
+                'port' => (int) (env('REVERB_PORT') ?: ($request->isSecure() ? 443 : $request->getPort())),
+                'scheme' => env('REVERB_SCHEME') ?: $request->getScheme(),
             ],
         ]);
     }

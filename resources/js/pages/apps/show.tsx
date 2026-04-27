@@ -23,11 +23,18 @@ interface AppPayload {
     created_at: string | null;
 }
 
-interface Props {
-    app: AppPayload;
+interface BroadcasterInfo {
+    host: string;
+    port: number;
+    scheme: string;
 }
 
-export default function ShowApp({ app }: Props) {
+interface Props {
+    app: AppPayload;
+    broadcaster: BroadcasterInfo;
+}
+
+export default function ShowApp({ app, broadcaster }: Props) {
     const form = useForm({
         name: app.name ?? '',
         allowed_origins: (app.allowed_origins ?? ['*']).join(', '),
@@ -93,13 +100,17 @@ export default function ShowApp({ app }: Props) {
                     </h1>
                 </div>
 
-                <section className="border-rule bg-steel-raised mb-10 rounded-md border">
-                    <div className="border-rule-soft border-b px-5 py-3">
-                        <span className="console-eyebrow">Credentials</span>
-                    </div>
-                    <Cred label="Key" value={app.key} />
-                    <Cred label="Secret" value={app.secret} />
-                </section>
+                <div className="mb-10 grid gap-6 lg:grid-cols-2">
+                    <section className="border-rule bg-steel-raised rounded-md border">
+                        <div className="border-rule-soft border-b px-5 py-3">
+                            <span className="console-eyebrow">Credentials</span>
+                        </div>
+                        <Cred label="Key" value={app.key} />
+                        <Cred label="Secret" value={app.secret} />
+                    </section>
+
+                    <DotenvSnippet app={app} broadcaster={broadcaster} />
+                </div>
 
                 <form
                     onSubmit={submit}
@@ -271,6 +282,56 @@ function Cred({ label, value }: { label: string; value: string }) {
                 {copied ? 'Copied' : 'Copy'}
             </button>
         </div>
+    );
+}
+
+function DotenvSnippet({
+    app,
+    broadcaster,
+}: {
+    app: AppPayload;
+    broadcaster: BroadcasterInfo;
+}) {
+    const [copied, setCopied] = useState(false);
+
+    const env = `BROADCAST_CONNECTION=reverb
+
+REVERB_APP_ID=${app.app_id}
+REVERB_APP_KEY=${app.key}
+REVERB_APP_SECRET=${app.secret}
+
+REVERB_HOST=${broadcaster.host}
+REVERB_PORT=${broadcaster.port}
+REVERB_SCHEME=${broadcaster.scheme}
+
+VITE_REVERB_APP_KEY="\${REVERB_APP_KEY}"
+VITE_REVERB_HOST="\${REVERB_HOST}"
+VITE_REVERB_PORT="\${REVERB_PORT}"
+VITE_REVERB_SCHEME="\${REVERB_SCHEME}"`;
+
+    const copy = async () => {
+        await navigator.clipboard.writeText(env);
+        setCopied(true);
+        window.setTimeout(() => setCopied(false), 1400);
+    };
+
+    return (
+        <section className="border-rule bg-steel-raised flex flex-col rounded-md border">
+            <div className="border-rule-soft flex items-center justify-between gap-3 border-b px-5 py-3">
+                <span className="console-eyebrow">Laravel · .env</span>
+                <button
+                    onClick={copy}
+                    className={`font-mono text-[11.5px] tracking-[0.14em] uppercase transition-colors ${
+                        copied ? 'text-live' : 'text-ink-muted hover:text-ink'
+                    }`}
+                >
+                    {copied ? 'Copied' : 'Copy all'}
+                </button>
+            </div>
+            <pre className="text-ink-soft scroll-thin flex-1 overflow-x-auto px-5 py-4 font-mono text-[12px] leading-[1.7] whitespace-pre">
+                {env}
+            </pre>
+        </section>
     );
 }
 
