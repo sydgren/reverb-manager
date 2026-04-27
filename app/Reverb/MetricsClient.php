@@ -4,7 +4,6 @@ namespace App\Reverb;
 
 use App\Models\ReverbApp;
 use Pusher\Pusher;
-use Pusher\PusherException;
 use Throwable;
 
 /**
@@ -22,11 +21,16 @@ class MetricsClient
     public function connections(ReverbApp $app): ?int
     {
         try {
-            $response = $this->client($app)->get("/apps/{$app->app_id}/connections");
+            // pusher-php-server prepends /apps/{app_id} to the path itself.
+            $response = $this->client($app)->get('/connections');
 
-            return is_array($response) && isset($response['connections'])
-                ? (int) $response['connections']
-                : null;
+            $connections = match (true) {
+                is_object($response) && isset($response->connections) => $response->connections,
+                is_array($response) && isset($response['connections']) => $response['connections'],
+                default => null,
+            };
+
+            return $connections === null ? null : (int) $connections;
         } catch (Throwable) {
             return null;
         }
@@ -39,14 +43,20 @@ class MetricsClient
     public function channels(ReverbApp $app): ?int
     {
         try {
-            $response = $this->client($app)->getChannels();
+            // Don't use getChannels() — pusher-php-server assumes the
+            // server returns an object map of channels, but Reverb sends
+            // an empty array when there are none, which crashes its
+            // get_object_vars(). Call the raw endpoint instead.
+            $response = $this->client($app)->get('/channels');
 
-            if (is_object($response) && isset($response->channels)) {
-                return count((array) $response->channels);
-            }
+            $channels = match (true) {
+                is_object($response) && isset($response->channels) => $response->channels,
+                is_array($response) && isset($response['channels']) => $response['channels'],
+                default => null,
+            };
 
-            return null;
-        } catch (PusherException|Throwable) {
+            return $channels === null ? null : count((array) $channels);
+        } catch (Throwable) {
             return null;
         }
     }
