@@ -2,34 +2,47 @@ import { useEffect, useState } from 'react';
 
 export type Appearance = 'light' | 'dark' | 'system';
 
-const prefersLight = () =>
+const isBrowser = (): boolean => typeof window !== 'undefined';
+
+const prefersLight = (): boolean =>
+    isBrowser() &&
     window.matchMedia('(prefers-color-scheme: light)').matches;
 
-const applyTheme = (appearance: Appearance) => {
+const applyTheme = (appearance: Appearance): void => {
+    if (!isBrowser()) {
+        return;
+    }
     const isLight =
         appearance === 'light' ||
         (appearance === 'system' && prefersLight());
 
-    // Dark is the default. We add `.light` only when we want to opt out.
     document.documentElement.classList.toggle('light', isLight);
 };
 
-const mediaQuery = window.matchMedia('(prefers-color-scheme: light)');
+const getMediaQuery = (): MediaQueryList | null =>
+    isBrowser()
+        ? window.matchMedia('(prefers-color-scheme: light)')
+        : null;
 
-const handleSystemThemeChange = () => {
+const handleSystemThemeChange = (): void => {
+    if (!isBrowser()) {
+        return;
+    }
     const currentAppearance = localStorage.getItem(
         'appearance',
     ) as Appearance | null;
     applyTheme(currentAppearance ?? 'system');
 };
 
-export function initializeTheme() {
+export function initializeTheme(): void {
+    if (!isBrowser()) {
+        return;
+    }
     const savedAppearance =
         (localStorage.getItem('appearance') as Appearance | null) ?? 'system';
 
     applyTheme(savedAppearance);
-
-    mediaQuery.addEventListener('change', handleSystemThemeChange);
+    getMediaQuery()?.addEventListener('change', handleSystemThemeChange);
 }
 
 export function useAppearance() {
@@ -37,7 +50,9 @@ export function useAppearance() {
 
     const updateAppearance = (mode: Appearance) => {
         setAppearance(mode);
-        localStorage.setItem('appearance', mode);
+        if (isBrowser()) {
+            localStorage.setItem('appearance', mode);
+        }
         applyTheme(mode);
     };
 
@@ -48,7 +63,10 @@ export function useAppearance() {
         updateAppearance(savedAppearance);
 
         return () =>
-            mediaQuery.removeEventListener('change', handleSystemThemeChange);
+            getMediaQuery()?.removeEventListener(
+                'change',
+                handleSystemThemeChange,
+            );
     }, []);
 
     return { appearance, updateAppearance };
