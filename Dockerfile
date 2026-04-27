@@ -25,6 +25,7 @@ RUN apk add --no-cache linux-headers \
     && docker-php-ext-enable pcntl sockets
 
 COPY --from=build /opt/app /app
+COPY config/reverb.php /app/config/reverb.php
 
 WORKDIR /app
 
