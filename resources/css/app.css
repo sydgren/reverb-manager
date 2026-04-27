@@ -1,0 +1,255 @@
+@import 'tailwindcss';
+
+@plugin 'tailwindcss-animate';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ | --------------------------------------------------------------------------
+ | reverb-manager — Server Console
+ | --------------------------------------------------------------------------
+ | Cooler, drier sibling to webhook-dev. Same fonts (Instrument Serif +
+ | JetBrains Mono) for family resemblance, but the palette swaps warm
+ | paper for steel and cobalt for electric cyan. Dark by default — admin
+ | tools live next to the terminal.
+ */
+
+@theme {
+    --font-sans:
+        'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas,
+        monospace;
+    --font-mono:
+        'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas,
+        monospace;
+    --font-display:
+        'Instrument Serif', ui-serif, Georgia, 'Times New Roman', serif;
+
+    --radius-lg: var(--radius);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-sm: calc(var(--radius) - 4px);
+
+    --color-steel: var(--steel);
+    --color-steel-raised: var(--steel-raised);
+    --color-steel-sunk: var(--steel-sunk);
+    --color-ink: var(--ink);
+    --color-ink-soft: var(--ink-soft);
+    --color-ink-muted: var(--ink-muted);
+    --color-rule: var(--rule);
+    --color-rule-soft: var(--rule-soft);
+    --color-signal: var(--signal);
+    --color-signal-ink: var(--signal-ink);
+    --color-live: var(--live);
+    --color-warn: var(--warn);
+    --color-danger: var(--danger);
+
+    /* shadcn aliases pointed at the new palette */
+    --color-background: var(--steel);
+    --color-foreground: var(--ink);
+    --color-card: var(--steel-raised);
+    --color-card-foreground: var(--ink);
+    --color-popover: var(--steel-raised);
+    --color-popover-foreground: var(--ink);
+    --color-primary: var(--ink);
+    --color-primary-foreground: var(--steel);
+    --color-secondary: var(--steel-raised);
+    --color-secondary-foreground: var(--ink);
+    --color-muted: var(--steel-raised);
+    --color-muted-foreground: var(--ink-muted);
+    --color-accent: var(--signal);
+    --color-accent-foreground: var(--signal-ink);
+    --color-destructive: var(--danger);
+    --color-destructive-foreground: var(--steel);
+    --color-border: var(--rule);
+    --color-input: var(--rule);
+    --color-ring: var(--signal);
+    --color-sidebar: var(--steel-sunk);
+    --color-sidebar-foreground: var(--ink);
+    --color-sidebar-primary: var(--ink);
+    --color-sidebar-primary-foreground: var(--steel);
+    --color-sidebar-accent: var(--steel-raised);
+    --color-sidebar-accent-foreground: var(--ink);
+    --color-sidebar-border: var(--rule);
+    --color-sidebar-ring: var(--signal);
+}
+
+/*
+ | Default dark mode. Light mode is opt-in via `.light` on <html>.
+ | --steel        page background
+ | --steel-raised cards / surfaces sitting on top of the page
+ | --steel-sunk   sidebars / nav rails sitting below the page
+ | --ink          primary text
+ | --ink-soft     secondary text
+ | --ink-muted    captions / placeholders
+ | --rule         hairline borders
+ | --rule-soft    quieter dividers inside cards
+ | --signal       cyan accent — primary CTA, links, focused states
+ | --live         green pulse — daemon online indicator
+ | --warn / --danger  reserved for warnings / destructive actions
+ */
+:root {
+    --steel: #0e1014;
+    --steel-raised: #16191f;
+    --steel-sunk: #0a0c10;
+    --ink: #e6e4dd;
+    --ink-soft: #aeaba0;
+    --ink-muted: #6b6960;
+    --rule: #232730;
+    --rule-soft: #1a1d24;
+
+    --signal: #00c2ff;
+    --signal-ink: #0a0c10;
+    --live: #00dc85;
+    --warn: #f0a958;
+    --danger: #ff7560;
+
+    --radius: 0.4rem;
+}
+
+.light {
+    --steel: #f2f3f5;
+    --steel-raised: #ffffff;
+    --steel-sunk: #e9ebee;
+    --ink: #0d0f12;
+    --ink-soft: #4a4d54;
+    --ink-muted: #7a7c84;
+    --rule: #d9dce0;
+    --rule-soft: #e6e8ec;
+
+    --signal: #0066cc;
+    --signal-ink: #ffffff;
+    --live: #00935a;
+    --warn: #b86b00;
+    --danger: #c1361f;
+}
+
+@layer base {
+    * {
+        @apply border-rule;
+    }
+
+    html {
+        background-color: var(--steel);
+    }
+
+    body {
+        background-color: var(--steel);
+        color: var(--ink);
+        font-family: var(--font-mono);
+        font-feature-settings:
+            'cv02' on,
+            'cv03' on,
+            'cv04' on,
+            'cv11' on;
+        text-rendering: geometricPrecision;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    ::selection {
+        background-color: var(--signal);
+        color: var(--signal-ink);
+    }
+}
+
+@layer utilities {
+    .font-display {
+        font-family: var(--font-display);
+        font-feature-settings: 'liga' on;
+    }
+
+    /* Tiny uppercase mono labels for section markers */
+    .console-eyebrow {
+        font-family: var(--font-mono);
+        font-size: 10.5px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+        color: var(--ink-muted);
+    }
+
+    /* Live indicator with halo — same family as webhook-dev */
+    .live-dot {
+        position: relative;
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 9999px;
+        background: var(--live);
+    }
+
+    .live-dot::after {
+        content: '';
+        position: absolute;
+        inset: -4px;
+        border-radius: 9999px;
+        background: var(--live);
+        opacity: 0.18;
+        animation: live-halo 1.6s ease-out infinite;
+    }
+
+    @keyframes live-halo {
+        0% {
+            transform: scale(0.6);
+            opacity: 0.4;
+        }
+        100% {
+            transform: scale(1.6);
+            opacity: 0;
+        }
+    }
+
+    /* Page-load reveal */
+    @keyframes console-rise {
+        from {
+            opacity: 0;
+            transform: translateY(6px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .console-rise {
+        animation: console-rise 500ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    }
+
+    /* Faint scan-line texture — appears on the steel-sunk surface only.
+       Subtle: the page should not look CRT-noisy, just feel slightly
+       built. */
+    .scanlines {
+        background-image: repeating-linear-gradient(
+            to bottom,
+            transparent 0,
+            transparent 2px,
+            color-mix(in oklab, var(--ink) 2%, transparent) 2px,
+            color-mix(in oklab, var(--ink) 2%, transparent) 3px
+        );
+    }
+
+    /* Slim scrollbar */
+    .scroll-thin::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    .scroll-thin::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .scroll-thin::-webkit-scrollbar-thumb {
+        background: var(--rule);
+        border-radius: 9999px;
+    }
+
+    .scroll-thin::-webkit-scrollbar-thumb:hover {
+        background: var(--ink-muted);
+    }
+
+    /* Tabular figures for everything that's a number or count */
+    .tabular {
+        font-variant-numeric: tabular-nums;
+    }
+}

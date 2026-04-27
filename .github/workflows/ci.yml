@@ -6,7 +6,7 @@ on:
   pull_request:
 
 jobs:
-  validate:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -15,6 +15,26 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.5'
+          tools: composer:v2
+          coverage: none
 
-      - name: Lint PHP config
-        run: php -l config/reverb.php
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Lint PHP
+        run: vendor/bin/pint --test --format agent
+
+      - name: Build assets
+        run: npm run build
+
+      - name: Run tests
+        run: php artisan test --compact
