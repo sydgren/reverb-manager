@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="color-scheme" content="dark light">
 
-        <title inertia>{{ config('app.name', 'reverb-manager') }}</title>
+        <title data-inertia>{{ config('app.name', 'reverb-manager') }}</title>
 
         <style>
             html { background-color: #0E1014; }
