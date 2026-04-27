@@ -3,34 +3,40 @@
 namespace App\Models;
 
 use Database\Factories\ReverbAppFactory;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-#[Fillable([
-    'app_id',
-    'name',
-    'key',
-    'secret',
-    'allowed_origins',
-    'ping_interval',
-    'activity_timeout',
-    'max_connections',
-    'max_message_size',
-    'accept_client_events_from',
-    'rate_limit_enabled',
-    'rate_limit_max_attempts',
-    'rate_limit_decay_seconds',
-    'rate_limit_terminate_on_limit',
-])]
-#[Hidden(['secret'])]
 class ReverbApp extends Model
 {
     /** @use HasFactory<ReverbAppFactory> */
     use HasFactory, HasUlids;
+
+    /**
+     * @var list<string>
+     */
+    protected $fillable = [
+        'app_id',
+        'name',
+        'key',
+        'secret',
+        'allowed_origins',
+        'ping_interval',
+        'activity_timeout',
+        'max_connections',
+        'max_message_size',
+        'accept_client_events_from',
+        'rate_limit_enabled',
+        'rate_limit_max_attempts',
+        'rate_limit_decay_seconds',
+        'rate_limit_terminate_on_limit',
+    ];
+
+    /**
+     * @var list<string>
+     */
+    protected $hidden = ['secret'];
 
     protected static function boot(): void
     {

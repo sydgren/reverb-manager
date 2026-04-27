@@ -21,11 +21,7 @@ class InviteUser extends Command
 
         $user = User::firstOrCreate(
             ['email' => $email],
-            [
-                'name' => $name,
-                'password' => bcrypt(Str::random(40)),
-                'email_verified_at' => now(),
-            ],
+            ['name' => $name],
         );
 
         $url = URL::temporarySignedRoute(
