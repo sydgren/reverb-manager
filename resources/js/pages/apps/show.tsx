@@ -1,14 +1,7 @@
 import { Head, Link, router, useForm } from '@inertiajs/react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
@@ -16,6 +9,7 @@ interface AppPayload {
     app_id: string;
     name: string | null;
     key: string;
+    secret: string;
     allowed_origins: string[];
     ping_interval: number;
     activity_timeout: number;
@@ -31,18 +25,9 @@ interface AppPayload {
 
 interface Props {
     app: AppPayload;
-    reveal_secret: string | null;
 }
 
-export default function ShowApp({ app, reveal_secret }: Props) {
-    const [secretOpen, setSecretOpen] = useState(Boolean(reveal_secret));
-
-    useEffect(() => {
-        if (reveal_secret) {
-            setSecretOpen(true);
-        }
-    }, [reveal_secret]);
-
+export default function ShowApp({ app }: Props) {
     const form = useForm({
         name: app.name ?? '',
         allowed_origins: (app.allowed_origins ?? ['*']).join(', '),
@@ -73,17 +58,6 @@ export default function ShowApp({ app, reveal_secret }: Props) {
         form.patch(`/apps/${app.app_id}`, { preserveScroll: true });
     };
 
-    const rotateSecret = () => {
-        if (
-            !window.confirm(
-                'Rotate the secret? Any publishers using the current secret will stop working until they pick up the new one.',
-            )
-        ) {
-            return;
-        }
-        router.post(`/apps/${app.app_id}/rotate-secret`);
-    };
-
     const destroy = () => {
         if (
             !window.confirm(
@@ -100,7 +74,6 @@ export default function ShowApp({ app, reveal_secret }: Props) {
             <Head title={app.name ?? 'App'} />
 
             <div className="mx-auto max-w-[840px]">
-                {/* eyebrow */}
                 <div className="console-eyebrow mb-2 flex items-center gap-3">
                     <Link
                         href="/apps"
@@ -120,27 +93,14 @@ export default function ShowApp({ app, reveal_secret }: Props) {
                     </h1>
                 </div>
 
-                {/* Credentials block — sticky-feeling, important */}
                 <section className="border-rule bg-steel-raised mb-10 rounded-md border">
                     <div className="border-rule-soft border-b px-5 py-3">
                         <span className="console-eyebrow">Credentials</span>
                     </div>
-                    <Cred label="Key" value={app.key} mono />
-                    <Cred
-                        label="Secret"
-                        value={'•••••••••••••••••••••• (hidden)'}
-                        action={
-                            <button
-                                onClick={rotateSecret}
-                                className="text-ink-muted hover:text-warn font-mono text-[11.5px] tracking-[0.14em] uppercase transition-colors"
-                            >
-                                Rotate
-                            </button>
-                        }
-                    />
+                    <Cred label="Key" value={app.key} />
+                    <Cred label="Secret" value={app.secret} />
                 </section>
 
-                {/* Settings form */}
                 <form
                     onSubmit={submit}
                     className="border-rule bg-steel-raised divide-rule-soft divide-y rounded-md border"
@@ -155,7 +115,7 @@ export default function ShowApp({ app, reveal_secret }: Props) {
                             onChange={(e) =>
                                 form.setData('name', e.target.value)
                             }
-                            className="border-0 bg-transparent h-10 px-0 font-mono shadow-none focus-visible:ring-0"
+                            className="h-10 border-0 bg-transparent px-0 font-mono shadow-none focus-visible:ring-0"
                         />
                     </Field>
 
@@ -166,12 +126,9 @@ export default function ShowApp({ app, reveal_secret }: Props) {
                         <Input
                             value={form.data.allowed_origins}
                             onChange={(e) =>
-                                form.setData(
-                                    'allowed_origins',
-                                    e.target.value,
-                                )
+                                form.setData('allowed_origins', e.target.value)
                             }
-                            className="border-0 bg-transparent h-10 px-0 font-mono shadow-none focus-visible:ring-0"
+                            className="h-10 border-0 bg-transparent px-0 font-mono shadow-none focus-visible:ring-0"
                         />
                     </Field>
 
@@ -186,7 +143,7 @@ export default function ShowApp({ app, reveal_secret }: Props) {
                                         Number(e.target.value),
                                     )
                                 }
-                                className="border-0 bg-transparent h-10 px-0 font-mono shadow-none focus-visible:ring-0"
+                                className="h-10 border-0 bg-transparent px-0 font-mono shadow-none focus-visible:ring-0"
                             />
                         </Field>
                         <Field label="Activity timeout (s)">
@@ -199,7 +156,7 @@ export default function ShowApp({ app, reveal_secret }: Props) {
                                         Number(e.target.value),
                                     )
                                 }
-                                className="border-0 bg-transparent h-10 px-0 font-mono shadow-none focus-visible:ring-0"
+                                className="h-10 border-0 bg-transparent px-0 font-mono shadow-none focus-visible:ring-0"
                             />
                         </Field>
                     </div>
@@ -219,7 +176,7 @@ export default function ShowApp({ app, reveal_secret }: Props) {
                                     )
                                 }
                                 placeholder="∞"
-                                className="border-0 bg-transparent h-10 px-0 font-mono shadow-none focus-visible:ring-0"
+                                className="h-10 border-0 bg-transparent px-0 font-mono shadow-none focus-visible:ring-0"
                             />
                         </Field>
                         <Field label="Max message size (bytes)">
@@ -232,7 +189,7 @@ export default function ShowApp({ app, reveal_secret }: Props) {
                                         Number(e.target.value),
                                     )
                                 }
-                                className="border-0 bg-transparent h-10 px-0 font-mono shadow-none focus-visible:ring-0"
+                                className="h-10 border-0 bg-transparent px-0 font-mono shadow-none focus-visible:ring-0"
                             />
                         </Field>
                     </div>
@@ -281,64 +238,14 @@ export default function ShowApp({ app, reveal_secret }: Props) {
                     config.
                 </p>
             </div>
-
-            {/* Show-secret-once dialog */}
-            <Dialog open={secretOpen} onOpenChange={setSecretOpen}>
-                <DialogContent className="bg-steel-raised border-rule sm:max-w-[480px]">
-                    <DialogHeader>
-                        <DialogTitle className="font-display text-[24px] italic">
-                            Copy your secret.
-                        </DialogTitle>
-                        <DialogDescription className="text-ink-soft mt-2 font-mono text-[13px] leading-[1.6]">
-                            We won't show it again. Store it somewhere safe —
-                            publishers need it to sign subscription requests.
-                        </DialogDescription>
-                    </DialogHeader>
-
-                    <div className="mt-2">
-                        <span className="console-eyebrow mb-2 block">
-                            Secret
-                        </span>
-                        <code className="border-rule bg-steel text-ink block w-full break-all rounded-md border px-3 py-2.5 font-mono text-[13px]">
-                            {reveal_secret}
-                        </code>
-                    </div>
-
-                    <div className="mt-4 flex justify-end">
-                        <Button
-                            onClick={() => {
-                                if (reveal_secret) {
-                                    navigator.clipboard.writeText(reveal_secret);
-                                }
-                                setSecretOpen(false);
-                            }}
-                            className="bg-signal text-signal-ink hover:bg-signal/90 font-mono"
-                        >
-                            Copy & close
-                        </Button>
-                    </div>
-                </DialogContent>
-            </Dialog>
         </AppLayout>
     );
 }
 
-function Cred({
-    label,
-    value,
-    mono = true,
-    action,
-}: {
-    label: string;
-    value: string;
-    mono?: boolean;
-    action?: React.ReactNode;
-}) {
+function Cred({ label, value }: { label: string; value: string }) {
     const [copied, setCopied] = useState(false);
-    const copyable = !value.includes('•');
 
     const copy = async () => {
-        if (!copyable) return;
         await navigator.clipboard.writeText(value);
         setCopied(true);
         window.setTimeout(() => setCopied(false), 1400);
@@ -348,30 +255,21 @@ function Cred({
         <div className="border-rule-soft flex items-center justify-between gap-4 border-b px-5 py-4 last:border-0">
             <div className="min-w-0 flex-1">
                 <Label className="console-eyebrow mb-1.5 block">{label}</Label>
-                <div
+                <code
                     onClick={copy}
-                    className={`text-ink truncate ${mono ? 'font-mono' : ''} text-[13px] ${
-                        copyable ? 'cursor-pointer' : ''
-                    }`}
+                    className="text-ink block cursor-pointer truncate font-mono text-[13px]"
                 >
                     {value}
-                </div>
+                </code>
             </div>
-            <div className="flex shrink-0 items-center gap-3">
-                {action}
-                {copyable && (
-                    <button
-                        onClick={copy}
-                        className={`font-mono text-[11.5px] tracking-[0.14em] uppercase transition-colors ${
-                            copied
-                                ? 'text-live'
-                                : 'text-ink-muted hover:text-ink'
-                        }`}
-                    >
-                        {copied ? 'Copied' : 'Copy'}
-                    </button>
-                )}
-            </div>
+            <button
+                onClick={copy}
+                className={`shrink-0 font-mono text-[11.5px] tracking-[0.14em] uppercase transition-colors ${
+                    copied ? 'text-live' : 'text-ink-muted hover:text-ink'
+                }`}
+            >
+                {copied ? 'Copied' : 'Copy'}
+            </button>
         </div>
     );
 }

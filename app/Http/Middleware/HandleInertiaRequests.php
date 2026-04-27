@@ -24,9 +24,6 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
-            'flash' => [
-                'reveal_secret' => fn () => $request->session()->get('reveal_secret'),
-            ],
         ]);
     }
 }

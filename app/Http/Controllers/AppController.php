@@ -15,7 +15,7 @@ class AppController extends Controller
     {
         $apps = ReverbApp::query()
             ->orderByDesc('created_at')
-            ->get(['id', 'app_id', 'name', 'key', 'allowed_origins', 'rate_limit_enabled', 'created_at']);
+            ->get();
 
         return Inertia::render('apps/index', [
             'apps' => $apps->map(fn (ReverbApp $a): array => [
@@ -40,18 +40,17 @@ class AppController extends Controller
 
         $app = ReverbApp::create($data);
 
-        return redirect()
-            ->route('apps.show', $app)
-            ->with('reveal_secret', $app->secret);
+        return redirect()->route('apps.show', $app);
     }
 
-    public function show(Request $request, ReverbApp $app): Response
+    public function show(ReverbApp $app): Response
     {
         return Inertia::render('apps/show', [
             'app' => [
                 'app_id' => $app->app_id,
                 'name' => $app->name,
                 'key' => $app->key,
+                'secret' => $app->secret,
                 'allowed_origins' => $app->allowed_origins ?? ['*'],
                 'ping_interval' => $app->ping_interval,
                 'activity_timeout' => $app->activity_timeout,
@@ -64,7 +63,6 @@ class AppController extends Controller
                 'rate_limit_terminate_on_limit' => $app->rate_limit_terminate_on_limit,
                 'created_at' => $app->created_at?->toIso8601String(),
             ],
-            'reveal_secret' => $request->session()->get('reveal_secret'),
         ]);
     }
 
@@ -82,16 +80,6 @@ class AppController extends Controller
         $app->delete();
 
         return redirect()->route('apps.index');
-    }
-
-    public function rotateSecret(ReverbApp $app): RedirectResponse
-    {
-        $newSecret = ReverbApp::generateSecret();
-        $app->update(['secret' => $newSecret]);
-
-        return redirect()
-            ->route('apps.show', $app)
-            ->with('reveal_secret', $newSecret);
     }
 
     /**

@@ -12,7 +12,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('apps/{app:app_id}', [AppController::class, 'show'])->name('apps.show');
     Route::patch('apps/{app:app_id}', [AppController::class, 'update'])->name('apps.update');
     Route::delete('apps/{app:app_id}', [AppController::class, 'destroy'])->name('apps.destroy');
-    Route::post('apps/{app:app_id}/rotate-secret', [AppController::class, 'rotateSecret'])->name('apps.rotate-secret');
 });
 
 require __DIR__.'/auth.php';
