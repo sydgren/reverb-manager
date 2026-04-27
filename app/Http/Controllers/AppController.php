@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\ReverbApp;
+use App\Models\ReverbMetric;
+use App\Reverb\MetricsClient;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -43,8 +46,47 @@ class AppController extends Controller
         return redirect()->route('apps.show', $app);
     }
 
-    public function show(Request $request, ReverbApp $app): Response
+    public function show(Request $request, ReverbApp $app, MetricsClient $metrics): Response
     {
+        $now = now();
+        $hour = $now->copy()->startOfHour();
+
+        $messages24h = (int) ReverbMetric::query()
+            ->where('reverb_app_id', $app->app_id)
+            ->where('type', ReverbMetric::TYPE_MESSAGE)
+            ->where('bucket_hour', '>=', $now->copy()->subDay())
+            ->sum('count');
+
+        $messages30d = (int) ReverbMetric::query()
+            ->where('reverb_app_id', $app->app_id)
+            ->where('type', ReverbMetric::TYPE_MESSAGE)
+            ->where('bucket_hour', '>=', $now->copy()->subDays(30))
+            ->sum('count');
+
+        $hourly24h = ReverbMetric::query()
+            ->where('reverb_app_id', $app->app_id)
+            ->where('type', ReverbMetric::TYPE_MESSAGE)
+            ->where('bucket_hour', '>=', $now->copy()->subDay()->startOfHour())
+            ->orderBy('bucket_hour')
+            ->pluck('count', 'bucket_hour')
+            ->mapWithKeys(fn ($count, $h) => [
+                $h instanceof Carbon
+                    ? $h->toIso8601String()
+                    : (string) $h => (int) $count,
+            ])
+            ->all();
+
+        // Build a 24-slot array (oldest → newest) so the sparkline lines up
+        // even when buckets are missing.
+        $sparkline = [];
+        for ($i = 23; $i >= 0; $i--) {
+            $bucket = $hour->copy()->subHours($i)->toIso8601String();
+            $sparkline[] = [
+                'hour' => $bucket,
+                'count' => (int) ($hourly24h[$bucket] ?? 0),
+            ];
+        }
+
         return Inertia::render('apps/show', [
             'app' => [
                 'app_id' => $app->app_id,
@@ -67,6 +109,13 @@ class AppController extends Controller
                 'host' => env('REVERB_HOST') ?: $request->getHost(),
                 'port' => (int) (env('REVERB_PORT') ?: ($request->isSecure() ? 443 : $request->getPort())),
                 'scheme' => env('REVERB_SCHEME') ?: $request->getScheme(),
+            ],
+            'stats' => [
+                'connections' => $metrics->connections($app),
+                'channels' => $metrics->channels($app),
+                'messages_24h' => $messages24h,
+                'messages_30d' => $messages30d,
+                'sparkline' => $sparkline,
             ],
         ]);
     }

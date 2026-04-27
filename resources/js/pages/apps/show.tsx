@@ -29,12 +29,26 @@ interface BroadcasterInfo {
     scheme: string;
 }
 
+interface SparklinePoint {
+    hour: string;
+    count: number;
+}
+
+interface Stats {
+    connections: number | null;
+    channels: number | null;
+    messages_24h: number;
+    messages_30d: number;
+    sparkline: SparklinePoint[];
+}
+
 interface Props {
     app: AppPayload;
     broadcaster: BroadcasterInfo;
+    stats: Stats;
 }
 
-export default function ShowApp({ app, broadcaster }: Props) {
+export default function ShowApp({ app, broadcaster, stats }: Props) {
     const form = useForm({
         name: app.name ?? '',
         allowed_origins: (app.allowed_origins ?? ['*']).join(', '),
@@ -99,6 +113,8 @@ export default function ShowApp({ app, broadcaster }: Props) {
                         )}
                     </h1>
                 </div>
+
+                <StatsRow stats={stats} />
 
                 <div className="mb-10 grid gap-6 lg:grid-cols-2">
                     <section className="border-rule bg-steel-raised rounded-md border">
@@ -283,6 +299,120 @@ function Cred({ label, value }: { label: string; value: string }) {
             </button>
         </div>
     );
+}
+
+function StatsRow({ stats }: { stats: Stats }) {
+    return (
+        <section className="border-rule bg-steel-raised mb-10 grid grid-cols-2 divide-x divide-y rounded-md border lg:grid-cols-4 lg:divide-y-0">
+            <Stat
+                label="Connections"
+                value={
+                    stats.connections === null
+                        ? '—'
+                        : formatNumber(stats.connections)
+                }
+                hint={
+                    stats.connections === null ? 'broadcaster offline' : 'live'
+                }
+                live={stats.connections !== null}
+            />
+            <Stat
+                label="Channels"
+                value={
+                    stats.channels === null
+                        ? '—'
+                        : formatNumber(stats.channels)
+                }
+                hint={
+                    stats.channels === null ? 'broadcaster offline' : 'live'
+                }
+            />
+            <Stat
+                label="Messages · 24h"
+                value={formatNumber(stats.messages_24h)}
+                sparkline={stats.sparkline}
+            />
+            <Stat
+                label="Messages · 30d"
+                value={formatNumber(stats.messages_30d)}
+            />
+        </section>
+    );
+}
+
+function Stat({
+    label,
+    value,
+    hint,
+    live,
+    sparkline,
+}: {
+    label: string;
+    value: string;
+    hint?: string;
+    live?: boolean;
+    sparkline?: SparklinePoint[];
+}) {
+    return (
+        <div className="flex flex-col gap-3 px-5 py-5">
+            <div className="flex items-center justify-between gap-3">
+                <span className="console-eyebrow">{label}</span>
+                {live && <span className="live-dot" />}
+            </div>
+            <div className="text-ink font-display text-[36px] leading-[1] tracking-tight italic">
+                {value}
+            </div>
+            {sparkline && sparkline.length > 0 ? (
+                <Sparkline points={sparkline} />
+            ) : hint ? (
+                <span className="text-ink-muted font-mono text-[10.5px] tracking-[0.14em] uppercase">
+                    {hint}
+                </span>
+            ) : (
+                <span className="h-[16px]" aria-hidden />
+            )}
+        </div>
+    );
+}
+
+function Sparkline({ points }: { points: SparklinePoint[] }) {
+    const max = Math.max(...points.map((p) => p.count), 1);
+    const width = 120;
+    const height = 16;
+    const stepX = width / Math.max(points.length - 1, 1);
+
+    const path = points
+        .map((p, i) => {
+            const x = i * stepX;
+            const y = height - (p.count / max) * height;
+            return `${i === 0 ? 'M' : 'L'} ${x.toFixed(1)} ${y.toFixed(1)}`;
+        })
+        .join(' ');
+
+    return (
+        <svg
+            viewBox={`0 0 ${width} ${height}`}
+            className="text-signal h-[16px] w-full"
+            preserveAspectRatio="none"
+            aria-hidden
+        >
+            <path
+                d={path}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.25"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                vectorEffect="non-scaling-stroke"
+            />
+        </svg>
+    );
+}
+
+function formatNumber(n: number): string {
+    if (n < 1000) return String(n);
+    if (n < 1_000_000) return `${(n / 1000).toFixed(n < 10_000 ? 1 : 0)}K`;
+    return `${(n / 1_000_000).toFixed(1)}M`;
 }
 
 function DotenvSnippet({
