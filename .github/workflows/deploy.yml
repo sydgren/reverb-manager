@@ -1,0 +1,28 @@
+name: deploy
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          tools: composer:v2
+          coverage: none
+
+      - name: Install Composer dependencies
+        run: composer install --no-dev --prefer-dist --no-progress --no-interaction
+
+      - name: Deploy to ShipIt
+        run: php artisan shipit:deploy --watch
+        env:
+          SHIPIT_TOKEN: ${{ secrets.SHIPIT_TOKEN }}
+          SHIPIT_SITE: ${{ vars.SHIPIT_SITE }}
