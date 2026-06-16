@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "877330dafb4b204a96ac3840c4b2eab7",
+    "content-hash": "257cb4a8a25a0b9f25b84da8c2e36966",
     "packages": [
         {
             "name": "brick/math",
@@ -4373,6 +4373,71 @@
                 }
             ],
             "time": "2024-06-11T12:45:25+00:00"
+        },
+        {
+            "name": "sydgren/laravel-shipit",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sydgren/laravel-shipit.git",
+                "reference": "aec93340ba17643dd40ef82f574b0b4576262a56"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sydgren/laravel-shipit/zipball/aec93340ba17643dd40ef82f574b0b4576262a56",
+                "reference": "aec93340ba17643dd40ef82f574b0b4576262a56",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^7.8",
+                "illuminate/console": "^11.0|^12.0|^13.0",
+                "illuminate/http": "^11.0|^12.0|^13.0",
+                "illuminate/support": "^11.0|^12.0|^13.0",
+                "php": "^8.2"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^9.0|^10.0",
+                "pestphp/pest": "^3.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "ShipIt": "Sydgren\\ShipIt\\Facades\\ShipIt"
+                    },
+                    "providers": [
+                        "Sydgren\\ShipIt\\ShipItServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Sydgren\\ShipIt\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Henrik Nordquist"
+                }
+            ],
+            "description": "Trigger and monitor ShipIt deployments from Artisan — php artisan shipit:deploy.",
+            "homepage": "https://shipit.henriknordquist.dk",
+            "keywords": [
+                "artisan",
+                "ci",
+                "deployment",
+                "laravel",
+                "shipit"
+            ],
+            "support": {
+                "issues": "https://github.com/sydgren/laravel-shipit/issues",
+                "source": "https://github.com/sydgren/laravel-shipit/tree/v1.0.0"
+            },
+            "time": "2026-06-01T08:27:56+00:00"
         },
         {
             "name": "symfony/clock",
@@ -9505,5 +9570,8 @@
         "php": "^8.5"
     },
     "platform-dev": {},
+    "platform-overrides": {
+        "php": "8.5.0"
+    },
     "plugin-api-version": "2.9.0"
 }
