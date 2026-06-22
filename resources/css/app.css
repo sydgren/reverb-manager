@@ -8,7 +8,7 @@
 
 /*
  | --------------------------------------------------------------------------
- | reverb-manager — Server Console
+ | reverberberb — Server Console
  | --------------------------------------------------------------------------
  | Cooler, drier sibling to webhook-dev. Same fonts (Instrument Serif +
  | JetBrains Mono) for family resemblance, but the palette swaps warm
@@ -17,14 +17,9 @@
  */
 
 @theme {
-    --font-sans:
-        'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas,
-        monospace;
-    --font-mono:
-        'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas,
-        monospace;
-    --font-display:
-        'Instrument Serif', ui-serif, Georgia, 'Times New Roman', serif;
+    --font-sans: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --font-display: 'Instrument Serif', ui-serif, Georgia, 'Times New Roman', serif;
 
     --radius-lg: var(--radius);
     --radius-md: calc(var(--radius) - 2px);

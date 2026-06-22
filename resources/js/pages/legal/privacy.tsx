@@ -4,7 +4,7 @@ export default function Privacy() {
     return (
         <LegalLayout title="Privacy Policy" updated="22 June 2026">
             <p>
-                This Privacy Policy explains how reverb·manager collects, uses,
+                This Privacy Policy explains how reverberberb collects, uses,
                 and protects your personal data when you use our hosted Laravel
                 Reverb broadcaster management platform (the “Service”). We
                 process personal data in accordance with the EU General Data
@@ -17,7 +17,7 @@ export default function Privacy() {
             <p>
                 The data controller responsible for your personal data is Henrik
                 Nordquist, CVR 37906794, registered at Hedeparken 173, 2. th,
-                2750 Ballerup, Denmark (“we”, “us”, “reverb·manager”). For any
+                2750 Ballerup, Denmark (“we”, “us”, “reverberberb”). For any
                 privacy question or to exercise your rights, contact{' '}
                 <a href="mailto:henrik@henriknordquist.dk">
                     henrik@henriknordquist.dk
@@ -85,7 +85,7 @@ export default function Privacy() {
 
             <h2>5. Where your data is hosted</h2>
             <p>
-                reverb·manager’s application, database, and session store are
+                reverberberb’s application, database, and session store are
                 hosted in the European Union on Hetzner infrastructure in
                 Germany, under a signed data processing agreement. We are an
                 EU-based company operating under EU law, and your data stays in
@@ -100,7 +100,7 @@ export default function Privacy() {
             <ul>
                 <li>
                     <strong>Hetzner</strong> (Germany, EU) — hosting of the
-                    reverb·manager application, database, and session store.
+                    reverberberb application, database, and session store.
                 </li>
                 <li>
                     <strong>Brevo</strong> (France, EU) — delivery of
@@ -184,7 +184,7 @@ export default function Privacy() {
             <h2>11. Data processed on your behalf</h2>
             <p>
                 When your end users connect to the Reverb apps you run through
-                reverb·manager, their realtime messages pass through our
+                reverberberb, their realtime messages pass through our
                 broadcaster in transit. We do <strong>not</strong> store the
                 content of those messages — only aggregate counts. To the extent
                 we process personal data contained in that traffic, we act solely

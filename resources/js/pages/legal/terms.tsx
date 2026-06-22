@@ -5,7 +5,7 @@ export default function Terms() {
         <LegalLayout title="Terms of Service" updated="22 June 2026">
             <p>
                 These Terms of Service (“Terms”) govern your access to and use
-                of reverb·manager (the “Service”), operated by Henrik Nordquist,
+                of reverberberb (the “Service”), operated by Henrik Nordquist,
                 CVR 37906794, Denmark. By creating an account or using the
                 Service, you agree to these Terms. If you are using the Service
                 on behalf of an organisation, you confirm that you are
@@ -14,7 +14,7 @@ export default function Terms() {
 
             <h2>1. The Service</h2>
             <p>
-                reverb·manager lets you create and manage Laravel Reverb
+                reverberberb lets you create and manage Laravel Reverb
                 broadcaster applications and view their usage. You remain
                 responsible for the applications and end-user traffic you run
                 through the Service.
@@ -97,7 +97,7 @@ export default function Terms() {
             <h2>9. Limitation of liability</h2>
             <p>
                 To the maximum extent permitted by applicable law,
-                reverb·manager shall not be liable for any indirect, incidental,
+                reverberberb shall not be liable for any indirect, incidental,
                 or consequential damages, or for loss of data, profits, or
                 revenue arising from your use of the Service. Our total
                 liability for any claim shall not exceed the greater of the

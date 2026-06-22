@@ -1,6 +1,6 @@
 # Records of Processing Activities (GDPR Art. 30)
 
-**Service:** reverb·manager — hosted management platform for Laravel Reverb broadcaster applications
+**Service:** reverberberb — hosted management platform for Laravel Reverb broadcaster applications
 **Document owner:** Henrik Nordquist
 **Version:** 1.0 · **Last updated:** 22 June 2026 · **Review cadence:** at least annually, and on any material change to processing
 

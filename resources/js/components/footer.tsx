@@ -11,7 +11,7 @@ export function Footer({ className = '' }: { className?: string }) {
         >
             <div className="mx-auto flex max-w-[1200px] flex-col items-center justify-between gap-3 px-5 py-6 sm:flex-row lg:px-8">
                 <span className="flex items-center gap-2">
-                    <span>© {new Date().getFullYear()} reverb·manager</span>
+                    <span>© {new Date().getFullYear()} reverberberb</span>
                     <span className="text-ink-soft">·</span>
                     <span aria-label="EU-based">🇪🇺 EU-based</span>
                 </span>

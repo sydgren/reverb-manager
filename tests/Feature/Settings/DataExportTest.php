@@ -24,7 +24,7 @@ class DataExportTest extends TestCase
         $response = $this->actingAs($user)->get(route('settings.export'));
 
         $response->assertOk();
-        $response->assertHeader('content-disposition', 'attachment; filename="reverb-manager-data-export.json"');
+        $response->assertHeader('content-disposition', 'attachment; filename="reverberberb-data-export.json"');
         $response->assertJsonPath('account.email', 'me@example.com');
         $response->assertJsonPath('reverb_apps.0.name', 'Mine');
     }
