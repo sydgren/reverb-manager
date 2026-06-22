@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.0](https://github.com/sydgren/reverb-manager/compare/v0.5.0...v0.6.0) (2026-06-22)
+
+
+### Features
+
+* branded email templates and reverberberb rebrand ([#18](https://github.com/sydgren/reverb-manager/issues/18)) ([5b774e4](https://github.com/sydgren/reverb-manager/commit/5b774e4f261cd13be1f01ace22732c73d74d6b89))
+
 ## [0.5.0](https://github.com/sydgren/reverb-manager/compare/v0.4.0...v0.5.0) (2026-06-22)
 
 
