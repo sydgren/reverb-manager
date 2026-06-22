@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/sydgren/reverb-manager/compare/v0.2.0...v0.3.0) (2026-06-22)
+
+
+### Features
+
+* GDPR compliance + EU-based messaging ([#11](https://github.com/sydgren/reverb-manager/issues/11)) ([9c5ea70](https://github.com/sydgren/reverb-manager/commit/9c5ea702b8d7aecadaf1f4837623f21702e559b8))
+
 ## [0.2.0](https://github.com/sydgren/reverb-manager/compare/v0.1.0...v0.2.0) (2026-06-22)
 
 
