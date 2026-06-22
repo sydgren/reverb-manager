@@ -18,13 +18,13 @@ export function Footer({ className = '' }: { className?: string }) {
                 <nav className="flex items-center gap-5">
                     <Link
                         href="/privacy"
-                        className="hover:text-ink transition-colors"
+                        className="text-ink-soft hover:text-ink transition-colors"
                     >
                         Privacy
                     </Link>
                     <Link
                         href="/terms"
-                        className="hover:text-ink transition-colors"
+                        className="text-ink-soft hover:text-ink transition-colors"
                     >
                         Terms
                     </Link>

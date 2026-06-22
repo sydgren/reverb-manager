@@ -59,7 +59,7 @@ export default function Login() {
                         onCheckedChange={(checked) =>
                             form.setData('remember', checked === true)
                         }
-                        className="border-rule"
+                        className="border-rule data-[state=checked]:bg-signal data-[state=checked]:text-signal-ink data-[state=checked]:border-signal"
                     />
                     <Label
                         htmlFor="remember"

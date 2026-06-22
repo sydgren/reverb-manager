@@ -46,7 +46,8 @@ export default function AppLayout({ children }: Props) {
                             <div className="flex items-center gap-3">
                                 <Link
                                     href="/settings"
-                                    className="text-ink-muted hover:text-ink font-mono text-[12px] transition-colors"
+                                    title="Account settings"
+                                    className="text-ink-muted hover:text-ink max-w-[180px] truncate font-mono text-[12px] transition-colors"
                                 >
                                     {auth.user.email}
                                 </Link>

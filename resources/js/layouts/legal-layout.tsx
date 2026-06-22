@@ -36,7 +36,7 @@ export default function LegalLayout({ title, updated, children }: Props) {
                 </div>
             </header>
 
-            <main className="mx-auto w-full max-w-[760px] flex-1 px-5 py-12 lg:px-8 lg:py-16">
+            <main className="mx-auto w-full max-w-[680px] flex-1 px-5 py-12 lg:px-8 lg:py-16">
                 <h1 className="font-display text-[34px] leading-tight italic">
                     {title}
                 </h1>
