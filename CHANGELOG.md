@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.0](https://github.com/sydgren/reverb-manager/compare/v0.3.0...v0.4.0) (2026-06-22)
+
+
+### Features
+
+* add Laravel Horizon for queue monitoring ([#13](https://github.com/sydgren/reverb-manager/issues/13)) ([1c8a327](https://github.com/sydgren/reverb-manager/commit/1c8a327cb0ffcd32f266e679ac115029c3293e72))
+
 ## [0.3.0](https://github.com/sydgren/reverb-manager/compare/v0.2.0...v0.3.0) (2026-06-22)
 
 
