@@ -93,7 +93,7 @@ class SettingsController extends Controller
         return response()
             ->json($export, options: JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)
             ->withHeaders([
-                'Content-Disposition' => 'attachment; filename="reverb-manager-data-export.json"',
+                'Content-Disposition' => 'attachment; filename="reverberberb-data-export.json"',
             ]);
     }
 

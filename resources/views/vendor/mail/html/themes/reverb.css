@@ -1,0 +1,338 @@
+/*
+ | --------------------------------------------------------------------------
+ | reverb·manager — branded email theme
+ | --------------------------------------------------------------------------
+ | Mirrors the app's "server console" identity: dark steel surfaces, electric
+ | cyan signal, JetBrains Mono. Laravel inlines these rules onto the matching
+ | elements before sending, so every value here is intentionally explicit and
+ | email-client safe (no flexbox/grid, web fonts degrade to system monospace).
+ |
+ | Palette (kept in sync with resources/css/app.css :root):
+ |   --steel        #0E1014   page background
+ |   --steel-raised #16191F   the message card
+ |   --ink          #E6E4DD   primary text
+ |   --ink-soft     #AEABA0   secondary text
+ |   --ink-muted    #6B6960   captions / footer
+ |   --rule         #232730   hairline borders
+ |   --signal       #00C2FF   cyan accent — CTA / links
+ |   --signal-ink   #0A0C10   text on the cyan button
+ */
+
+/* Base */
+
+body {
+    background-color: #0e1014;
+    color: #e6e4dd;
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+    -webkit-text-size-adjust: none;
+    -webkit-font-smoothing: antialiased;
+    margin: 0;
+    padding: 0;
+    width: 100% !important;
+}
+
+a {
+    color: #00c2ff;
+    text-decoration: none;
+}
+
+a img {
+    border: none;
+}
+
+/* Typography */
+
+h1 {
+    color: #e6e4dd;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-top: 0;
+    margin-bottom: 18px;
+    text-align: left;
+}
+
+h2 {
+    color: #e6e4dd;
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 0;
+    text-align: left;
+}
+
+h3 {
+    color: #e6e4dd;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 0;
+    text-align: left;
+}
+
+p {
+    color: #aeaba0;
+    font-size: 15px;
+    line-height: 1.65;
+    margin-top: 0;
+    margin-bottom: 18px;
+    text-align: left;
+}
+
+p.sub {
+    font-size: 12px;
+}
+
+img {
+    max-width: 100%;
+}
+
+/* Layout */
+
+.wrapper {
+    background-color: #0e1014;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    -premailer-cellpadding: 0;
+    -premailer-cellspacing: 0;
+    -premailer-width: 100%;
+}
+
+.content {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    -premailer-cellpadding: 0;
+    -premailer-cellspacing: 0;
+    -premailer-width: 100%;
+}
+
+/* Header */
+
+.header {
+    padding: 32px 0 26px;
+    text-align: center;
+}
+
+.header a {
+    color: #e6e4dd;
+    font-size: 17px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+/* Logo / wordmark */
+
+.brand-mark {
+    border: 2px solid #e6e4dd;
+    border-radius: 7px;
+    display: inline-block;
+    height: 12px;
+    width: 12px;
+    line-height: 12px;
+    padding: 5px;
+    vertical-align: middle;
+}
+
+.brand-mark-fill {
+    background-color: #00c2ff;
+    border-radius: 2px;
+    display: block;
+    height: 12px;
+    width: 12px;
+    font-size: 0;
+    line-height: 0;
+}
+
+.brand-word {
+    color: #e6e4dd;
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    vertical-align: middle;
+}
+
+.brand-dot {
+    background-color: #00c2ff;
+    border-radius: 2px;
+    display: inline-block;
+    height: 7px;
+    width: 7px;
+    margin: 0 4px;
+    vertical-align: middle;
+}
+
+/* Body */
+
+.body {
+    background-color: #0e1014;
+    border-bottom: none;
+    border-top: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    -premailer-cellpadding: 0;
+    -premailer-cellspacing: 0;
+    -premailer-width: 100%;
+}
+
+.inner-body {
+    background-color: #16191f;
+    border-radius: 10px;
+    border: 1px solid #232730;
+    margin: 0 auto;
+    padding: 0;
+    width: 570px;
+    -premailer-cellpadding: 0;
+    -premailer-cellspacing: 0;
+    -premailer-width: 570px;
+}
+
+.content-cell {
+    max-width: 100vw;
+    padding: 36px 40px;
+}
+
+/* Buttons */
+
+.action {
+    margin: 30px auto;
+    padding: 0;
+    text-align: center;
+    -premailer-cellpadding: 0;
+    -premailer-cellspacing: 0;
+    -premailer-width: 100%;
+}
+
+.button {
+    border-radius: 7px;
+    color: #0a0c10;
+    display: inline-block;
+    overflow: hidden;
+    text-decoration: none;
+    -webkit-text-size-adjust: none;
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    padding: 13px 28px;
+}
+
+.button-primary {
+    background-color: #00c2ff;
+    border: 1px solid #00c2ff;
+    color: #0a0c10;
+}
+
+.button-success {
+    background-color: #00dc85;
+    border: 1px solid #00dc85;
+    color: #0a0c10;
+}
+
+.button-error {
+    background-color: #ff7560;
+    border: 1px solid #ff7560;
+    color: #0a0c10;
+}
+
+/* Panels */
+
+.panel {
+    border-left: 3px solid #00c2ff;
+    margin: 21px 0;
+}
+
+.panel-content {
+    background-color: #0e1014;
+    color: #aeaba0;
+    padding: 16px;
+}
+
+.panel-content p {
+    color: #aeaba0;
+}
+
+.panel-item {
+    padding: 0;
+}
+
+.panel-item p:last-of-type {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+/* Tables */
+
+.table table {
+    margin: 30px auto;
+    width: 100%;
+    -premailer-cellpadding: 0;
+    -premailer-cellspacing: 0;
+    -premailer-width: 100%;
+}
+
+.table th {
+    border-bottom: 1px solid #232730;
+    color: #6b6960;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin: 0;
+    padding-bottom: 8px;
+}
+
+.table td {
+    color: #aeaba0;
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
+    padding: 10px 0;
+}
+
+.content-cell .table td {
+    border-bottom: 1px solid #1a1d24;
+}
+
+/* Subcopy */
+
+.subcopy {
+    border-top: 1px solid #232730;
+    margin-top: 26px;
+    padding-top: 22px;
+}
+
+.subcopy p {
+    color: #6b6960;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.subcopy a {
+    color: #00c2ff;
+    word-break: break-all;
+}
+
+/* Footer */
+
+.footer {
+    margin: 0 auto;
+    padding: 0;
+    text-align: center;
+    width: 570px;
+    -premailer-cellpadding: 0;
+    -premailer-cellspacing: 0;
+    -premailer-width: 570px;
+}
+
+.footer p {
+    color: #6b6960;
+    font-size: 11px;
+    line-height: 1.6;
+    text-align: center;
+}
+
+.footer a {
+    color: #6b6960;
+    text-decoration: underline;
+}

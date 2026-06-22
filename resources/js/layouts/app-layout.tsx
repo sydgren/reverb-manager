@@ -28,7 +28,7 @@ export default function AppLayout({ children }: Props) {
                     <Link
                         href="/apps"
                         className="flex shrink-0 items-center gap-2"
-                        aria-label="reverb·manager"
+                        aria-label="reverberberb"
                     >
                         <Mark className="size-5" />
                         <Wordmark size="sm" className="hidden sm:inline-flex" />

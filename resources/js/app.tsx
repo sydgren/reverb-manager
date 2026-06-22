@@ -8,7 +8,7 @@ declare global {
     const route: typeof routeFn;
 }
 
-const appName = import.meta.env.VITE_APP_NAME || 'reverb-manager';
+const appName = import.meta.env.VITE_APP_NAME || 'reverberberb';
 
 const pages = import.meta.glob('./pages/**/*.tsx');
 

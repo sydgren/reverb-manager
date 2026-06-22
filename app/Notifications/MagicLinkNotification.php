@@ -23,10 +23,11 @@ class MagicLinkNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('Sign in to reverb·manager')
-            ->greeting('Sign in to reverb·manager')
+            ->subject('Sign in to reverberberb')
+            ->greeting('Sign in to reverberberb')
             ->line('Click the button below to finish signing in. The link expires in 15 minutes and can only be used once.')
             ->action('Sign in', $this->url)
-            ->line('If you did not request this, ignore this email — no action will be taken.');
+            ->line('If you did not request this, ignore this email — no action will be taken.')
+            ->salutation('Regards, reverberberb');
     }
 }
