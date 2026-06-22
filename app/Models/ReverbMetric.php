@@ -22,6 +22,8 @@ class ReverbMetric extends Model
 
     public const TYPE_MESSAGE = 'message';
 
+    public const TYPE_PUBLISH = 'publish';
+
     public function prunable(): Builder
     {
         return static::query()->where('bucket_hour', '<', now()->subDays(90));

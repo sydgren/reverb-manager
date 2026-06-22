@@ -9,14 +9,15 @@ use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class AppController extends Controller
 {
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $apps = ReverbApp::query()
+        $apps = $request->user()->reverbApps()
             ->orderByDesc('created_at')
             ->get();
 
@@ -39,15 +40,28 @@ class AppController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        $limits = $request->user()->planLimits();
+
+        if ($request->user()->reverbApps()->count() >= $limits->maxApps) {
+            throw ValidationException::withMessages([
+                'name' => "Your plan allows at most {$limits->maxApps} app(s).",
+            ]);
+        }
+
         $data = $this->validateRequest($request);
 
-        $app = ReverbApp::create($data);
+        // Free-tier apps default to the plan's connection ceiling.
+        $data['max_connections'] ??= $limits->maxConnections;
+
+        $app = $request->user()->reverbApps()->create($data);
 
         return redirect()->route('apps.show', $app);
     }
 
     public function show(Request $request, ReverbApp $app, MetricsClient $metrics): Response
     {
+        $this->authorize('view', $app);
+
         $now = now();
         $hour = $now->copy()->startOfHour();
 
@@ -61,6 +75,13 @@ class AppController extends Controller
             ->where('reverb_app_id', $app->app_id)
             ->where('type', ReverbMetric::TYPE_MESSAGE)
             ->where('bucket_hour', '>=', $now->copy()->subDays(30))
+            ->sum('count');
+
+        // Customer-facing usage: publishes within the active calendar month.
+        $publishesMonth = (int) ReverbMetric::query()
+            ->where('reverb_app_id', $app->app_id)
+            ->where('type', ReverbMetric::TYPE_PUBLISH)
+            ->where('bucket_hour', '>=', $now->copy()->startOfMonth())
             ->sum('count');
 
         $hourly24h = ReverbMetric::query()
@@ -115,6 +136,8 @@ class AppController extends Controller
                 'channels' => $metrics->channels($app),
                 'messages_24h' => $messages24h,
                 'messages_30d' => $messages30d,
+                'publishes_month' => $publishesMonth,
+                'max_publishes_month' => $request->user()->planLimits()->maxPublishesPerMonth,
                 'sparkline' => $sparkline,
             ],
         ]);
@@ -122,6 +145,8 @@ class AppController extends Controller
 
     public function update(Request $request, ReverbApp $app): RedirectResponse
     {
+        $this->authorize('update', $app);
+
         $data = $this->validateRequest($request);
 
         $app->update($data);
@@ -131,6 +156,8 @@ class AppController extends Controller
 
     public function destroy(ReverbApp $app): RedirectResponse
     {
+        $this->authorize('delete', $app);
+
         $app->delete();
 
         return redirect()->route('apps.index');
@@ -141,13 +168,15 @@ class AppController extends Controller
      */
     private function validateRequest(Request $request): array
     {
+        $maxConnections = $request->user()->planLimits()->maxConnections;
+
         return $request->validate([
             'name' => ['nullable', 'string', 'max:120'],
             'allowed_origins' => ['nullable', 'array'],
             'allowed_origins.*' => ['string'],
             'ping_interval' => ['nullable', 'integer', 'min:5', 'max:600'],
             'activity_timeout' => ['nullable', 'integer', 'min:5', 'max:600'],
-            'max_connections' => ['nullable', 'integer', 'min:1'],
+            'max_connections' => ['nullable', 'integer', 'min:1', "max:{$maxConnections}"],
             'max_message_size' => ['nullable', 'integer', 'min:128'],
             'accept_client_events_from' => ['nullable', Rule::in(['all', 'members', 'none'])],
             'rate_limit_enabled' => ['nullable', 'boolean'],

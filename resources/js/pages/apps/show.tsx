@@ -39,6 +39,8 @@ interface Stats {
     channels: number | null;
     messages_24h: number;
     messages_30d: number;
+    publishes_month: number;
+    max_publishes_month: number;
     sparkline: SparklinePoint[];
 }
 
@@ -114,7 +116,7 @@ export default function ShowApp({ app, broadcaster, stats }: Props) {
                     </h1>
                 </div>
 
-                <StatsRow stats={stats} />
+                <StatsRow stats={stats} maxConnections={app.max_connections} />
 
                 <div className="mb-10 grid gap-6 lg:grid-cols-2">
                     <section className="border-rule bg-steel-raised rounded-md border">
@@ -301,15 +303,23 @@ function Cred({ label, value }: { label: string; value: string }) {
     );
 }
 
-function StatsRow({ stats }: { stats: Stats }) {
+function StatsRow({
+    stats,
+    maxConnections,
+}: {
+    stats: Stats;
+    maxConnections: number | null;
+}) {
     return (
-        <section className="border-rule bg-steel-raised mb-10 grid grid-cols-2 divide-x divide-y rounded-md border lg:grid-cols-4 lg:divide-y-0">
+        <section className="border-rule bg-steel-raised mb-10 grid grid-cols-2 divide-x divide-y rounded-md border lg:grid-cols-5 lg:divide-y-0">
             <Stat
                 label="Connections"
                 value={
                     stats.connections === null
                         ? '—'
-                        : formatNumber(stats.connections)
+                        : maxConnections === null
+                          ? formatNumber(stats.connections)
+                          : `${formatNumber(stats.connections)} / ${formatNumber(maxConnections)}`
                 }
                 hint={
                     stats.connections === null ? 'broadcaster offline' : 'live'
@@ -335,6 +345,11 @@ function StatsRow({ stats }: { stats: Stats }) {
             <Stat
                 label="Messages · 30d"
                 value={formatNumber(stats.messages_30d)}
+            />
+            <Stat
+                label="Publishes · month"
+                value={`${formatNumber(stats.publishes_month)} / ${formatNumber(stats.max_publishes_month)}`}
+                hint="this month"
             />
         </section>
     );

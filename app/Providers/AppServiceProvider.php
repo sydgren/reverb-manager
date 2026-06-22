@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Listeners\RecordMessageReceived;
 use App\Listeners\RecordMessageSent;
 use App\Models\ReverbApp;
 use App\Observers\ReverbAppObserver;
@@ -9,6 +10,7 @@ use App\Reverb\DatabaseApplicationProvider;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Reverb\ApplicationManager;
+use Laravel\Reverb\Events\MessageReceived;
 use Laravel\Reverb\Events\MessageSent;
 
 class AppServiceProvider extends ServiceProvider
@@ -39,5 +41,6 @@ class AppServiceProvider extends ServiceProvider
         ReverbApp::observe(ReverbAppObserver::class);
 
         Event::listen(MessageSent::class, RecordMessageSent::class);
+        Event::listen(MessageReceived::class, RecordMessageReceived::class);
     }
 }

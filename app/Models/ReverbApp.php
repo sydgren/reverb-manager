@@ -6,6 +6,7 @@ use Database\Factories\ReverbAppFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
 class ReverbApp extends Model
@@ -53,6 +54,14 @@ class ReverbApp extends Model
                 $app->app_id = static::generateAppId();
             }
         });
+    }
+
+    /**
+     * @return BelongsTo<User, $this>
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     public static function generateAppId(): string
