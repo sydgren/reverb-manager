@@ -10,9 +10,9 @@ use Illuminate\Support\Str;
 
 class InviteUser extends Command
 {
-    protected $signature = 'reverb-manager:invite {email} {--name= : Display name}';
+    protected $signature = 'app:user:invite {email} {--name= : Display name}';
 
-    protected $description = 'Create an admin user (passwordless) and email them a magic link to sign in.';
+    protected $description = 'Create a user (passwordless) and email them a magic link to sign in.';
 
     public function handle(): int
     {

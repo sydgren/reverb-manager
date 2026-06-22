@@ -13,6 +13,7 @@
         "inertiajs/inertia-laravel": "^3.0",
         "laravel/framework": "^13.0",
         "laravel/horizon": "^5.47",
+        "laravel/pulse": "^1.7",
         "laravel/reverb": "^1.10",
         "laravel/tinker": "^3.0",
         "sydgren/laravel-shipit": "^1.0",

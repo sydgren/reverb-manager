@@ -36,6 +36,7 @@ class User extends Authenticatable
      */
     protected $attributes = [
         'plan' => Plan::Free->value,
+        'is_admin' => false,
     ];
 
     /**
@@ -58,6 +59,7 @@ class User extends Authenticatable
     {
         return [
             'plan' => Plan::class,
+            'is_admin' => 'boolean',
         ];
     }
 
