@@ -23,6 +23,7 @@ class MagicLinkController extends Controller
     {
         $data = $request->validate([
             'email' => ['required', 'email'],
+            'remember' => ['nullable', 'boolean'],
         ]);
 
         $user = User::where('email', $data['email'])->first();
@@ -31,7 +32,9 @@ class MagicLinkController extends Controller
             $url = URL::temporarySignedRoute(
                 'login.consume',
                 now()->addMinutes(15),
-                ['user' => $user->id],
+                // The remember choice rides in the signed payload, so it
+                // can't be tampered with between request and consumption.
+                ['user' => $user->id, 'remember' => $request->boolean('remember') ? 1 : 0],
             );
 
             $user->notify(new MagicLinkNotification($url));
@@ -50,7 +53,9 @@ class MagicLinkController extends Controller
 
     public function consume(Request $request, User $user): RedirectResponse
     {
-        Auth::login($user, remember: true);
+        // A persistent "remember me" cookie is not consent-exempt under
+        // ePrivacy, so we only set it when the user explicitly opted in.
+        Auth::login($user, remember: $request->boolean('remember'));
 
         $request->session()->regenerate();
 

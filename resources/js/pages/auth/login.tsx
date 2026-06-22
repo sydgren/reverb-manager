@@ -1,11 +1,12 @@
 import { Head, useForm } from '@inertiajs/react';
 import AuthLayout from '@/layouts/auth-layout';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 export default function Login() {
-    const form = useForm({ email: '' });
+    const form = useForm({ email: '', remember: false });
 
     return (
         <AuthLayout>
@@ -49,6 +50,24 @@ export default function Login() {
                             {form.errors.email}
                         </p>
                     )}
+                </div>
+
+                <div className="flex items-center gap-2.5">
+                    <Checkbox
+                        id="remember"
+                        checked={form.data.remember}
+                        onCheckedChange={(checked) =>
+                            form.setData('remember', checked === true)
+                        }
+                        className="border-rule data-[state=checked]:bg-signal data-[state=checked]:text-signal-ink data-[state=checked]:border-signal"
+                    />
+                    <Label
+                        htmlFor="remember"
+                        className="text-ink-soft text-[12px] leading-snug"
+                    >
+                        Keep me signed in on this device{' '}
+                        <span className="text-ink-muted">(uses a cookie)</span>
+                    </Label>
                 </div>
 
                 <Button
