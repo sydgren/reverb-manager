@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.0](https://github.com/sydgren/reverb-manager/compare/v0.4.0...v0.5.0) (2026-06-22)
+
+
+### Features
+
+* add Laravel Pulse with admin-only dashboard access ([#15](https://github.com/sydgren/reverb-manager/issues/15)) ([fa2652c](https://github.com/sydgren/reverb-manager/commit/fa2652c97b9748f0d3eda0fd88d11744c771bb0c))
+
 ## [0.4.0](https://github.com/sydgren/reverb-manager/compare/v0.3.0...v0.4.0) (2026-06-22)
 
 
