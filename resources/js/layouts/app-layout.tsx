@@ -2,6 +2,7 @@ import { Link, router, usePage } from '@inertiajs/react';
 import type { ReactNode } from 'react';
 import { Mark } from '@/components/brand/mark';
 import { Wordmark } from '@/components/brand/wordmark';
+import { Footer } from '@/components/footer';
 import type { SharedData } from '@/types';
 
 interface Props {
@@ -21,7 +22,7 @@ export default function AppLayout({ children }: Props) {
     };
 
     return (
-        <div className="bg-steel text-ink min-h-screen">
+        <div className="bg-steel text-ink flex min-h-screen flex-col">
             <header className="border-rule sticky top-0 z-20 border-b backdrop-blur-md">
                 <div className="bg-steel/85 mx-auto flex max-w-[1200px] items-center justify-between gap-4 px-5 py-3 lg:px-8">
                     <Link
@@ -43,9 +44,12 @@ export default function AppLayout({ children }: Props) {
 
                         {auth?.user && (
                             <div className="flex items-center gap-3">
-                                <span className="text-ink-muted hidden font-mono text-[12px] sm:inline">
+                                <Link
+                                    href="/settings"
+                                    className="text-ink-muted hover:text-ink font-mono text-[12px] transition-colors"
+                                >
                                     {auth.user.email}
-                                </span>
+                                </Link>
                                 <button
                                     onClick={signOut}
                                     className="text-ink-muted hover:text-ink font-mono text-[12px] transition-colors"
@@ -58,9 +62,11 @@ export default function AppLayout({ children }: Props) {
                 </div>
             </header>
 
-            <main className="mx-auto max-w-[1200px] px-5 py-10 lg:px-8 lg:py-14">
+            <main className="mx-auto w-full max-w-[1200px] flex-1 px-5 py-10 lg:px-8 lg:py-14">
                 {children}
             </main>
+
+            <Footer />
         </div>
     );
 }

@@ -1,3 +1,4 @@
+import { Link } from '@inertiajs/react';
 import type { ReactNode } from 'react';
 import { Mark } from '@/components/brand/mark';
 import { Wordmark } from '@/components/brand/wordmark';
@@ -24,8 +25,18 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
                 </div>
 
                 <p className="text-ink-muted mt-6 text-center font-mono text-[11px] tracking-[0.14em] uppercase">
-                    Self-hosted broadcaster · v0.1
+                    🇪🇺 EU-based · hosted in the EU
                 </p>
+
+                <nav className="text-ink-muted mt-3 flex items-center justify-center gap-4 font-mono text-[11px] tracking-[0.06em]">
+                    <Link href="/privacy" className="hover:text-ink transition-colors">
+                        Privacy
+                    </Link>
+                    <span className="text-ink-soft">·</span>
+                    <Link href="/terms" className="hover:text-ink transition-colors">
+                        Terms
+                    </Link>
+                </nav>
             </div>
         </div>
     );
