@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\RestartReverb;
 use App\Models\ReverbMetric;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -97,9 +99,8 @@ class SettingsController extends Controller
 
     /**
      * Erasure (GDPR Art. 17) — delete the account and everything tied to it.
-     * Deleting the apps cascades through the foreign key and fires the observer
-     * that drains the broadcaster; their hourly metrics are keyed by app_id
-     * (no FK), so we purge those explicitly.
+     * Their hourly metrics are keyed by app_id (no FK), so we purge those
+     * explicitly alongside the apps.
      */
     public function destroy(Request $request): RedirectResponse
     {
@@ -107,14 +108,25 @@ class SettingsController extends Controller
 
         $appIds = $user->reverbApps()->pluck('app_id');
 
-        ReverbMetric::query()->whereIn('reverb_app_id', $appIds)->delete();
-        $user->reverbApps()->each(fn ($app) => $app->delete());
-
+        // Log out first: logging out *after* deleting would re-persist the
+        // user (SessionGuard cycles the remember token via save()) and
+        // resurrect the row we just erased.
         Auth::logout();
-        $user->delete();
-
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
+        // Erase atomically — a half-finished erasure would leave orphaned
+        // personal data. Bulk-delete the apps (skips the per-row observer) so
+        // we dispatch a single broadcaster restart afterwards, not one per app.
+        DB::transaction(function () use ($user, $appIds): void {
+            ReverbMetric::query()->whereIn('reverb_app_id', $appIds)->delete();
+            $user->reverbApps()->delete();
+            $user->delete();
+        });
+
+        if ($appIds->isNotEmpty()) {
+            RestartReverb::dispatch();
+        }
 
         return redirect('/');
     }

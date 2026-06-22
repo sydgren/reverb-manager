@@ -38,6 +38,19 @@ class AccountDeletionTest extends TestCase
         $this->assertDatabaseMissing('reverb_metrics', ['reverb_app_id' => $app->app_id]);
     }
 
+    public function test_a_user_with_a_remember_token_is_fully_erased(): void
+    {
+        // Regression: logging out after delete re-persists the user via the
+        // remember-token cycle and resurrects the row. Logout must come first.
+        $user = User::factory()->create(['remember_token' => 'a-real-token']);
+
+        $this->actingAs($user)
+            ->delete(route('settings.destroy'))
+            ->assertRedirect('/');
+
+        $this->assertModelMissing($user);
+    }
+
     public function test_deletion_leaves_other_users_data_intact(): void
     {
         $user = User::factory()->create();
