@@ -5,9 +5,11 @@ namespace App\Providers;
 use App\Listeners\RecordMessageReceived;
 use App\Listeners\RecordMessageSent;
 use App\Models\ReverbApp;
+use App\Models\User;
 use App\Observers\ReverbAppObserver;
 use App\Reverb\DatabaseApplicationProvider;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Reverb\ApplicationManager;
 use Laravel\Reverb\Events\MessageReceived;
@@ -42,5 +44,11 @@ class AppServiceProvider extends ServiceProvider
 
         Event::listen(MessageSent::class, RecordMessageSent::class);
         Event::listen(MessageReceived::class, RecordMessageReceived::class);
+
+        // Only administrators may view the Pulse dashboard. Mirrors the
+        // viewHorizon gate.
+        Gate::define('viewPulse', function (?User $user = null): bool {
+            return $user?->is_admin === true;
+        });
     }
 }
