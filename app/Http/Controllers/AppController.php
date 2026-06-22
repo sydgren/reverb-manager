@@ -14,9 +14,9 @@ use Inertia\Response;
 
 class AppController extends Controller
 {
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $apps = ReverbApp::query()
+        $apps = $request->user()->reverbApps()
             ->orderByDesc('created_at')
             ->get();
 
@@ -41,13 +41,15 @@ class AppController extends Controller
     {
         $data = $this->validateRequest($request);
 
-        $app = ReverbApp::create($data);
+        $app = $request->user()->reverbApps()->create($data);
 
         return redirect()->route('apps.show', $app);
     }
 
     public function show(Request $request, ReverbApp $app, MetricsClient $metrics): Response
     {
+        $this->authorize('view', $app);
+
         $now = now();
         $hour = $now->copy()->startOfHour();
 
@@ -122,6 +124,8 @@ class AppController extends Controller
 
     public function update(Request $request, ReverbApp $app): RedirectResponse
     {
+        $this->authorize('update', $app);
+
         $data = $this->validateRequest($request);
 
         $app->update($data);
@@ -131,6 +135,8 @@ class AppController extends Controller
 
     public function destroy(ReverbApp $app): RedirectResponse
     {
+        $this->authorize('delete', $app);
+
         $app->delete();
 
         return redirect()->route('apps.index');
