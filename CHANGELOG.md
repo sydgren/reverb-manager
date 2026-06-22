@@ -1,0 +1,11 @@
+# Changelog
+
+## [0.2.0](https://github.com/sydgren/reverb-manager/compare/v0.1.0...v0.2.0) (2026-06-22)
+
+
+### Features
+
+* **apps:** associate apps with an owner ([625b4f8](https://github.com/sydgren/reverb-manager/commit/625b4f8c2eaf4d77c5b80b04ef9bd6f6c011950d)), closes [#2](https://github.com/sydgren/reverb-manager/issues/2)
+* **metrics:** meter publishes alongside deliveries ([195b40f](https://github.com/sydgren/reverb-manager/commit/195b40f3b42c8a02dc5623336ec4ca97f6a960c8)), closes [#4](https://github.com/sydgren/reverb-manager/issues/4)
+* per-user free tier — ownership, plan caps, publish metering ([dbe7006](https://github.com/sydgren/reverb-manager/commit/dbe7006aea66e3e579834240de55e8b32344780b))
+* **plans:** free-tier plan with connection and app caps ([78c5e80](https://github.com/sydgren/reverb-manager/commit/78c5e804d167949a89013c4e6e84ec670e4373de)), closes [#3](https://github.com/sydgren/reverb-manager/issues/3)
