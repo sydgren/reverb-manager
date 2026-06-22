@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -39,7 +40,18 @@ class AppController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        $limits = $request->user()->planLimits();
+
+        if ($request->user()->reverbApps()->count() >= $limits->maxApps) {
+            throw ValidationException::withMessages([
+                'name' => "Your plan allows at most {$limits->maxApps} app(s).",
+            ]);
+        }
+
         $data = $this->validateRequest($request);
+
+        // Free-tier apps default to the plan's connection ceiling.
+        $data['max_connections'] ??= $limits->maxConnections;
 
         $app = $request->user()->reverbApps()->create($data);
 
@@ -147,13 +159,15 @@ class AppController extends Controller
      */
     private function validateRequest(Request $request): array
     {
+        $maxConnections = $request->user()->planLimits()->maxConnections;
+
         return $request->validate([
             'name' => ['nullable', 'string', 'max:120'],
             'allowed_origins' => ['nullable', 'array'],
             'allowed_origins.*' => ['string'],
             'ping_interval' => ['nullable', 'integer', 'min:5', 'max:600'],
             'activity_timeout' => ['nullable', 'integer', 'min:5', 'max:600'],
-            'max_connections' => ['nullable', 'integer', 'min:1'],
+            'max_connections' => ['nullable', 'integer', 'min:1', "max:{$maxConnections}"],
             'max_message_size' => ['nullable', 'integer', 'min:128'],
             'accept_client_events_from' => ['nullable', Rule::in(['all', 'members', 'none'])],
             'rate_limit_enabled' => ['nullable', 'boolean'],
