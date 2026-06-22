@@ -77,6 +77,13 @@ class AppController extends Controller
             ->where('bucket_hour', '>=', $now->copy()->subDays(30))
             ->sum('count');
 
+        // Customer-facing usage: publishes within the active calendar month.
+        $publishesMonth = (int) ReverbMetric::query()
+            ->where('reverb_app_id', $app->app_id)
+            ->where('type', ReverbMetric::TYPE_PUBLISH)
+            ->where('bucket_hour', '>=', $now->copy()->startOfMonth())
+            ->sum('count');
+
         $hourly24h = ReverbMetric::query()
             ->where('reverb_app_id', $app->app_id)
             ->where('type', ReverbMetric::TYPE_MESSAGE)
@@ -129,6 +136,8 @@ class AppController extends Controller
                 'channels' => $metrics->channels($app),
                 'messages_24h' => $messages24h,
                 'messages_30d' => $messages30d,
+                'publishes_month' => $publishesMonth,
+                'max_publishes_month' => $request->user()->planLimits()->maxPublishesPerMonth,
                 'sparkline' => $sparkline,
             ],
         ]);

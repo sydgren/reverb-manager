@@ -39,6 +39,8 @@ interface Stats {
     channels: number | null;
     messages_24h: number;
     messages_30d: number;
+    publishes_month: number;
+    max_publishes_month: number;
     sparkline: SparklinePoint[];
 }
 
@@ -309,7 +311,7 @@ function StatsRow({
     maxConnections: number | null;
 }) {
     return (
-        <section className="border-rule bg-steel-raised mb-10 grid grid-cols-2 divide-x divide-y rounded-md border lg:grid-cols-4 lg:divide-y-0">
+        <section className="border-rule bg-steel-raised mb-10 grid grid-cols-2 divide-x divide-y rounded-md border lg:grid-cols-5 lg:divide-y-0">
             <Stat
                 label="Connections"
                 value={
@@ -343,6 +345,11 @@ function StatsRow({
             <Stat
                 label="Messages · 30d"
                 value={formatNumber(stats.messages_30d)}
+            />
+            <Stat
+                label="Publishes · month"
+                value={`${formatNumber(stats.publishes_month)} / ${formatNumber(stats.max_publishes_month)}`}
+                hint="this month"
             />
         </section>
     );
