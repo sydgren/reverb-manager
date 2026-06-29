@@ -261,10 +261,9 @@ export default function ShowApp({ app, broadcaster, stats }: Props) {
                 </form>
 
                 <p className="text-ink-muted mt-6 font-mono text-[11.5px] leading-[1.7]">
-                    Any save triggers a graceful{' '}
-                    <code className="text-ink">reverb:restart</code> — the
-                    daemon drains existing connections and picks up the new
-                    config.
+                    Changes apply to new connections immediately — the daemon
+                    reads apps from the database per connection. Already-open
+                    connections keep their current config until they reconnect.
                 </p>
             </div>
         </AppLayout>

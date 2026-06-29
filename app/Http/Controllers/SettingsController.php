@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\RestartReverb;
 use App\Models\ReverbMetric;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -116,17 +115,14 @@ class SettingsController extends Controller
         $request->session()->regenerateToken();
 
         // Erase atomically — a half-finished erasure would leave orphaned
-        // personal data. Bulk-delete the apps (skips the per-row observer) so
-        // we dispatch a single broadcaster restart afterwards, not one per app.
+        // personal data. The database-backed application provider resolves
+        // apps live per connection, so erased apps simply stop authenticating
+        // new connections; no broadcaster restart is required.
         DB::transaction(function () use ($user, $appIds): void {
             ReverbMetric::query()->whereIn('reverb_app_id', $appIds)->delete();
             $user->reverbApps()->delete();
             $user->delete();
         });
-
-        if ($appIds->isNotEmpty()) {
-            RestartReverb::dispatch();
-        }
 
         return redirect('/');
     }

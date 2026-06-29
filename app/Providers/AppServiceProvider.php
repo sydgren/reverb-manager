@@ -4,9 +4,7 @@ namespace App\Providers;
 
 use App\Listeners\RecordMessageReceived;
 use App\Listeners\RecordMessageSent;
-use App\Models\ReverbApp;
 use App\Models\User;
-use App\Observers\ReverbAppObserver;
 use App\Reverb\DatabaseApplicationProvider;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
@@ -40,8 +38,6 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        ReverbApp::observe(ReverbAppObserver::class);
-
         Event::listen(MessageSent::class, RecordMessageSent::class);
         Event::listen(MessageReceived::class, RecordMessageReceived::class);
 
